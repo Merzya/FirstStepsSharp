@@ -7,9 +7,13 @@ namespace consolesapp
     class Program
     {
 
-
         static void Main(string[] args)
         {
+           
+            BlackJack blackJack = new BlackJack();
+            blackJack.PlayGame();
+            
+
             if (ReturnComAge(args))
             {
                 Console.WriteLine("PlayBlackJack");
@@ -96,20 +100,18 @@ namespace consolesapp
         {
             if (youContinue)
             {
-
-            Console.WriteLine("Тягнутимеш карту? (Т)ак/(Н)і");
-            string ans = Console.ReadLine();
-            if (ans is "т" or "так")
-            {
-                Console.WriteLine("Ти потягнув карту");
-            }
-
-            if (ans is "н" or "ні")
-            {
-                Console.WriteLine("Ти зпасував"); 
-                youContinue = false;
-            }
-
+                Console.WriteLine("Тягнутимеш карту? (Т)ак/(Н)і");
+                string ans = Console.ReadLine();
+        
+                if (ans is "т" or "так")
+                {
+                    Console.WriteLine("Ти потягнув карту");
+                }
+                else  
+                {
+                    Console.WriteLine("Ти зпасував"); 
+                    youContinue = false;
+                }
             }
             return youContinue;
         }
