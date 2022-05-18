@@ -9,7 +9,10 @@ namespace Rogalik
             Look = look;
         }
 
-        public Position Position { get; set;}
+        public Position Position { get; set; }  
+        
+         
+
         public string Look { get; private set; }
     }
 

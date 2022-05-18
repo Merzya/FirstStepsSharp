@@ -13,7 +13,7 @@ namespace Rogalik
             RenderMap (fieldSize);
         }
      
-        public void RenderMap(byte fieldSize)
+        public string[,] RenderMap(byte fieldSize)
         {
             for (int y = 0; y < fieldSize; y++)
             {
@@ -23,7 +23,8 @@ namespace Rogalik
                     _fields[x, y] = EmptyField;
                 }
                
-            } 
+            }
+            return _fields;
         }
 
         public string[,]  GetMap()
@@ -34,11 +35,14 @@ namespace Rogalik
         public void AddCreature(Creatures creatures)
         {
             Position CreaturePos = creatures.Position;
+           
             _fields[CreaturePos.X, CreaturePos.Y] = creatures.Look;
         }
+                
         public void DelCreature(Creatures creatures)
         {
             Position CreaturePos = creatures.Position;
+            
             _fields[CreaturePos.X, CreaturePos.Y] = EmptyField;
         }
     }

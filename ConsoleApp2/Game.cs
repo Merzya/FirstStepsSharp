@@ -1,80 +1,128 @@
 ﻿namespace Rogalik
 {
-    internal partial class Game
+      internal partial class Game
     {
+        public const int MAP_SIZE = 6;
+
         public Game()
         {
         }
 
-
-
         internal void Start()
         {
-            Field map = new(6);
-            Hero hero = new(new Position(2, 4));
-            Moskal moskal = new(new Position(5, 3));
+            Random random = new Random();
 
-            for (int i = 0; i < 2; i++)
+
+            Field map = new(MAP_SIZE);
+
+            Hero hero = new(RandomPosition(random));
+            map.AddCreature(hero);
+
+            Moskal moskal = new(RandomPosition(random));
+            map.AddCreature(moskal);
+
+            for (int i = 0; i < 4; i++)
             {
-                Mine mine = new(new Position(i + 2, i + 1));
+                Mine mine = new(RandomPosition(random));
                 map.AddCreature(mine);
             }
 
             for (int i = 0; i < 2; i++)
             {
-                Helicopter helicopter = new(new Position(i + 1, i + i));
+                Helicopter helicopter = new(RandomPosition(random));
                 map.AddCreature(helicopter);
             }
-            map.AddCreature(hero);
-            map.AddCreature(moskal);
 
-            
             while (hero.IsAlive && !moskal.IsDead)
             {
+               
                 Console.Clear();
                 PrintMap(map.GetMap());
-                ConsoleKeyInfo consoleKey = Console.ReadKey(true);
                 
+                Console.WriteLine("Hero: " + hero.Position.X + " " + hero.Position.Y);
+                Console.WriteLine("moskal: " + moskal.Position.X + " " + moskal.Position.Y);
+                if (hero.Position.Equals(moskal.Position))
+                {
+                    hero.IsAlive = false;
+                    break;
+                }
+
+
+                ConsoleKeyInfo consoleKey = Console.ReadKey(true);
+
                 map.DelCreature(hero);
-                switch (consoleKey.Key)
                
+                switch (consoleKey.Key)
+
                 {
                     case ConsoleKey.LeftArrow:
                         hero.Move(Arrows.Left);
                         break;
-                    
+
                     case ConsoleKey.UpArrow:
                         hero.Move(Arrows.Up);
                         break;
-                    
+
                     case ConsoleKey.RightArrow:
                         hero.Move(Arrows.Right);
                         break;
-                   
+
                     case ConsoleKey.DownArrow:
                         hero.Move(arrrow: Arrows.Down);
                         break;
-                    
+
                     default:
                         break;
                 }
+
+                string? helicopter = map.GetMap()[hero.Position.X, hero.Position.Y];
+                if (helicopter == "[Ж]")
+                {
+                    
+                    hero.Position = new(RandomPosition(random)); 
+                }
+
+                string? mine = map.GetMap()[hero.Position.X, hero.Position.Y];
+                if (mine == "[O]")
+                {
+                    hero.IsAlive = false;
+                    break;
+                }
+
                 map.AddCreature(hero);
-               
+
+                if (hero.Position.Equals(moskal.Position))
+                {
+                    moskal.IsDead = true;
+                    break;
+                }
+
+                map.DelCreature(moskal);
+                moskal.Run(random.Next(1, 4));
+                map.AddCreature(moskal);
+
                 if (consoleKey.Key == ConsoleKey.Escape)
                 {
                     break;
                 }
 
             }
-
+            Console.Clear();
+            PrintMap(map.GetMap());
             if (hero.IsAlive)
             {
                 Console.WriteLine("Перемога!!! Слава Україні");
             }
-            if (moskal.IsDead)
+            if (!moskal.IsDead)
             {
                 Console.WriteLine("Зрада!!! Москаляку на гілляку");
             }
+
+        }
+
+        private static Position RandomPosition(Random random)
+        {
+            return new Position(random.Next(0, MAP_SIZE), random.Next(0, MAP_SIZE));
         }
 
         private void PrintMap(string[,] fields)
